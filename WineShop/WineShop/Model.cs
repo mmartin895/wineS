@@ -29,6 +29,15 @@ namespace WineShop
                 .WithMany(v => v.Packages)
                 .HasForeignKey(vp => vp.WineId);
 
+            modelBuilder.Entity<WineType>().HasData(
+             new WineType { Id = 1, Name = "Chardonay", Description = "Dobro vino"},
+             new WineType { Id = 2, Name = "Vino tipa 2", Description = "Dobro vino1" },
+             new WineType { Id = 3, Name = "Vino tipa 3", Description = "Dobro vino2" });
+
+            modelBuilder.Entity<PackageType>().HasData(
+             new PackageType { Id = 1, Name = "Dobrotvorni" },
+             new PackageType { Id = 2, Name = "Akcijski" },
+             new PackageType { Id = 3, Name = "Promidzbeni" });
         }
 
        

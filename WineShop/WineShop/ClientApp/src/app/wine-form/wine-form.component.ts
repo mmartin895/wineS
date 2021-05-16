@@ -16,12 +16,7 @@ export class WineFormComponent implements OnInit {
   public nameOfWine: string;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router) {
-    http.get<Vine[]>(baseUrl + 'api/wines').subscribe(result => {
-      this.vines = result;
-    }, error => console.error(error));
-    http.get<VineType[]>(baseUrl + 'api/wineTypes').subscribe(result => {
-      this.vtypes = result;
-    }, error => console.error(error));
+ 
   }
 
   public deleteWine(id) {
@@ -39,12 +34,17 @@ export class WineFormComponent implements OnInit {
     
     this.http.post<Vine>(this.baseUrl + "api/wines", vine).subscribe(result => {
       console.log(result)
+      this.router.navigate(['/wines']);
     }, error => console.error(error));
-    this.router.navigate(['/wines']);
-
   };
 
   ngOnInit() {
+    this.http.get<Vine[]>(this.baseUrl + 'api/wines').subscribe(result => {
+      this.vines = result;
+    }, error => console.error(error));
+    this.http.get<VineType[]>(this.baseUrl + 'api/wineTypes').subscribe(result => {
+      this.vtypes = result;
+    }, error => console.error(error));
   }
 
 }
