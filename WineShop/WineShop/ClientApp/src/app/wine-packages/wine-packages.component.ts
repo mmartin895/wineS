@@ -46,10 +46,14 @@ export class WinePackagesComponent implements OnInit {
     this.baseUrl = baseUrl;
   }
 
-  private loadPackages() {
+  private loadPackages (callb?: any) {
     this.http.get<WinePackage[]>(this.baseUrl + 'api/packages').subscribe(result => {
       this.packages = result;
+      if (callb) {
+        callb();
+      }
     }, error => console.error(error));
+ 
   }
 
   private loadPackageTypes() {
@@ -70,7 +74,8 @@ export class WinePackagesComponent implements OnInit {
     }, error => console.error(error));
   }
 
-  private showAddPackageForm():void {
+  private showAddPackageForm(): void {
+    this.onCancelEditPackage();
     this.addingPackage = true;
   }
 
@@ -86,12 +91,17 @@ export class WinePackagesComponent implements OnInit {
   }
 
   private onSubmitPackage(): void {
+
     const payload = {
       name: this.addPackageForm.value['name'],
       PackageTypeId: this.addPackageForm.value['packageTypeId']
     };
-    this.http.post(this.baseUrl + 'api/packages',  payload).subscribe(result => {
-      this.loadPackages();
+    this.http.post<WinePackage>(this.baseUrl + 'api/packages', payload).subscribe(result => { 
+      this.loadPackages(() => {
+        const paket = this.packages.find(p => p.id === result.id);
+        this.selectPackage(paket);
+      });
+      this.selectedPackage = null;
     }, error => console.error(error));
 
     console.log(this.addPackageForm.value);
@@ -127,6 +137,8 @@ export class WinePackagesComponent implements OnInit {
   }
 
   private selectPackage(winePackage: WinePackage): void {
+    this.onCancelAddPackage();
+    this.onCancelEditPackage();
     this.selectedPackage = winePackage;
     this.loadWinesInPackage(winePackage);
   }
@@ -164,6 +176,8 @@ export class WinePackagesComponent implements OnInit {
   }
 
   private onDeleteWine(winePackage: WineInPackage): void {
+    this.onCancelAddPackage();
+    this.onCancelEditPackage();
     const payload = {
       Packageid: winePackage.packageId,
       Wineid: winePackage.wineId
@@ -179,7 +193,10 @@ export class WinePackagesComponent implements OnInit {
   }
 
   private onEditPackage(winePackage: WinePackage): void {
+    this.onCancelAddPackage();
     this.editPackage = winePackage;
+    this.selectedPackage = winePackage;
+    this.loadWinesInPackage(winePackage);
     this.editPackageForm.setValue({
       id: winePackage.id,
       packageTypeId: winePackage.packageTypeId,
@@ -188,14 +205,18 @@ export class WinePackagesComponent implements OnInit {
   }
 
   private onSubmitEditPackage(): void {
+    const id = this.editPackageForm.value['id'];
     const payload = {
-      id: this.editPackageForm.value['id'],
+      id: id,
       packageTypeId: this.editPackageForm.value['packageTypeId'],
       name: this.editPackageForm.value['name']
     };
-
+ 
     this.http.put(this.baseUrl + `api/packages/${payload.id}`, payload).subscribe(result => {
-      this.loadPackages();
+      this.loadPackages(() => {
+        var packet = this.packages.find(p =>  p.id === id );
+        this.selectedPackage = packet;   
+      });
     }, error => console.error(error));
 
     console.log(this.editPackageForm.value);

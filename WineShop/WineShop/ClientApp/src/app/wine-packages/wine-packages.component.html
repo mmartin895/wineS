@@ -52,6 +52,7 @@
       </div>
       </div>
     <div class="col-6">
+      <p *ngIf="selectedPackage" > {{selectedPackage.name}}</p>
       <table *ngIf="selectedPackage" class="table">
         <thead>
           <tr>
