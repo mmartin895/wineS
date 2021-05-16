@@ -1,0 +1,104 @@
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <button *ngIf="!addingPackage" type="button" class="btn btn-primary" (click)="showAddPackageForm()">add</button>
+      <form *ngIf="addingPackage" [formGroup]="addPackageForm" (ngSubmit)="onSubmitPackage()">
+        <div>
+          <label for="name" class="form-label">
+            Name
+          </label>
+          <input id="name" type="text" formControlName="name" class="form-control">
+
+          <select class="form-control form-select form-select-lg" aria-label="Package type" formControlName="packageTypeId">
+            <option *ngFor="let packageType of packageTypes" value="{{packageType.id}}">{{packageType.name}}</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="reset" class="btn btn-danger" (click)="onCancelAddPackage()">Cancel</button>
+        </div>
+      </form>
+      <div *ngFor="let package of packages">
+        <div *ngIf="editPackage !== package" class="row" [ngClass]="{'table-info': package === selectedPackage}">
+          <div class="col-4">
+              {{package.name}}
+            </div>
+          <div class="col-3">
+            {{package.packageType.name}}
+          </div>
+
+          <div class="col-5">
+            <button type="button" class="btn btn-info btn-sm" (click)="selectPackage(package)">Details</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="onEditPackage(package)">Edit</button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="onDeletePackage(package)">Delete</button>
+          </div>
+        </div>
+        <div *ngIf="editPackage === package" class="row">
+          <div class="col-12">
+            <form *ngIf="editPackage === package" [formGroup]="editPackageForm" (ngSubmit)="onSubmitEditPackage()">
+              <div>
+                <label for="name" class="form-label">
+                  Name
+                </label>
+                <input id="name" type="text" formControlName="name" class="form-control">
+
+                <select class="form-control form-select form-select-lg" aria-label="Package type" formControlName="packageTypeId">
+                  <option *ngFor="let packageType of packageTypes" value="{{packageType.id}}">{{packageType.name}}</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <button type="reset" class="btn btn-danger btn-sm" (click)="onCancelEditPackage()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+    <div class="col-6">
+      <table *ngIf="selectedPackage" class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let wine of winesInPackage">
+            <td>{{ wine.wineId }}</td>
+            <td>{{ wine.wine.name}}</td>
+            <td *ngIf="selectedWineInPackage !== wine">{{ wine.quantity}}</td>
+            <td *ngIf="selectedWineInPackage === wine">
+              <form [formGroup]="editWineInPackageForm" (ngSubmit)="onEditWine()">
+                <div>
+                  <input id="quantity" type="text" formControlName="quantity" class="form-control">
+
+                  <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                  <button type="reset" class="btn btn-danger btn-sm" (click)="onCancelEditWine()">Cancel</button>
+                </div>
+              </form>
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm" (click)="editWine(wine)">Edit</button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="onDeleteWine(wine)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button *ngIf="!addingWineToPackage && selectedPackage" type="button" class="btn btn-primary" (click)="showAddWineToPackageForm()">add</button>
+      <form *ngIf="addingWineToPackage" [formGroup]="editWineInPackageForm" (ngSubmit)="onAddWine()">
+        <div>
+
+          <select class="form-control form-select form-select-lg" aria-label="Wine" formControlName="wineId">
+            <option *ngFor="let wine of wines" value="{{wine.id}}">{{wine.name}}</option>
+          </select>
+          <label for="quantity" class="form-label">
+            Quantity
+          </label>
+          <input id="quantity" type="text" formControlName="quantity" class="form-control">
+
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="reset" class="btn btn-danger" (click)="onCancelAddWine()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

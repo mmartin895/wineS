@@ -1,0 +1,26 @@
+<ul class="navbar-nav flex-grow">
+  <li class="nav-item"
+      [routerLinkActive]="['link-active']"
+      [routerLinkActiveOptions]="{ exact: true }">
+    <button class="btn btn-primary" [routerLink]="['/addWine']">Add new wine</button>
+  </li>
+</ul>
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="vines">
+ 
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let vine of vines">
+      <td>{{ vine.id}}</td>
+      <td>{{ vine.name}}</td>
+      <td>{{ vine.wineTypeId}}</td>
+      <button class="btn btn-primary" (click)="deleteWine(vine.id)">Delete wine</button>
+    </tr>
+  </tbody>
+</table>

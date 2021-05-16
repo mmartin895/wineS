@@ -1,0 +1,45 @@
+<ul class="navbar-nav flex-grow">
+  <li class="nav-item"
+      [routerLinkActive]="['link-active']"
+      [routerLinkActiveOptions]="{ exact: true }">
+    <button class="btn btn-primary" [routerLink]="['/wines']">Back to wines</button>
+  </li>
+</ul>
+<br />
+
+<form #simpleForm="ngForm" class="simple-form" (ngSubmit)="addWine(simpleForm.value)">
+  <label class="class1">Wine name:</label>
+  <input type="text" ngModel name="imeVina" placeholder="Enter wine name!" />
+  <br />
+  <label class="class1" >Wine type: </label>
+  <select ngModel name="vrstaVina">
+    <option value="none" selected disabled >
+      Select an Option
+    </option>
+    <option *ngFor="let vtype of vtypes" value={{vtype.id}}>
+      {{vtype.name}}
+    </option>
+  </select>
+  <p></p>
+  <button class="btn btn-primary">Submit</button>
+  <p></p>
+</form>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="vines">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let vtype of vtypes">
+      <td>{{ vtype.id}}</td>
+      <td>{{ vtype.name}}</td>
+      <td>{{ vtype.description}}</td>
+      <button class="btn btn-primary" (click)="deleteWine(vtype.id)">Delete</button>
+    </tr>
+  </tbody>
+</table>
